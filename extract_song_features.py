@@ -12,17 +12,20 @@ def curl_request(prefix, ID,access_token):
     return response.json() 
     
     
-def extract_track_features( ID ,is_playlist ):
+def extract_track_features( ID ,is_audio_feature ):
     fh = open('access_token.txt','r')
     lines = fh.readlines()
     access_token = lines[0].split(':')[1].split('\n')[0]
 
-    if is_playlist:
-        prefix = 'https://api.spotify.com/v1/playlists/'
-        response = curl_request(prefix, ID,access_token )
-    else:
+    if is_audio_feature:
         prefix = 'https://api.spotify.com/v1/audio-features/'
         response = curl_request(prefix, ID,access_token )
+        print(response)
+
+    else:
+        prefix = 'https://api.spotify.com/v1/tracks/'
+        response = curl_request(prefix, ID,access_token )
+        print(response)
    
     return response
 
@@ -30,77 +33,70 @@ def extract_track_features( ID ,is_playlist ):
 
 if __name__ == '__main__':
 
-    PLAYLIST_id = '3cEYpjA9oz9GiPac4AsH4n'
-    response = extract_track_features(PLAYLIST_id, 1)
-    PLAYLIST_name = response['name']
+    with open('mpd.slice.0-999.json', 'r') as f:
+        data = json.load(f)
+        playlists = data['playlists']  
+        for i in range(len(playlists)):
+            print('playlist count:',i)
+            playlist = playlists[i]
+            PLAYLIST_id =  playlist['pid']
+            PLAYLIST_name = playlist['name']
+            tracks_list = playlist['tracks']
+            tracks_features = []
+            for j in range(len(tracks_list)):
+                print('track count:',j)
+                track_dictionary = {}
+                track = tracks_list[j]
+                track_id = track['track_uri'].split(':')[2].split('"')[0]
+                track_features = extract_track_features(track_id,0)
+                ALBUM_id = track['album_uri'].split(':')[2].split('"')[0]
+                ALBUM_name = track['album_name']
+                RELEASE_date = track_features['album']['release_date']
+                ALBUM_type = track_features['album']['album_type']
 
-    items = response['tracks']['items'] 
-    tracks = []
-    playlist_dictionary = {}
+                artists = track_features['artists']
+                ARTIST_names = []
+                for k in range(0, len(artists)):
+                    artist =  artists[k]
+                    ARTIST_names.append(artist['name'])
+                
+                DURATION_ms = track_features['duration_ms']
+                POPULARITY = track_features['popularity']
 
-    for i in range(0, len(items)): # each index contains a track
-        track_dictionary = {}
-        item = items[i]
-        track_id = item['track']['id']
-        SPOTIFY_album_id = item['track']['album']['id']
-        ALBUM_name =  item['track']['album']['name']
-        ALBUM_type =  item['track']['album']['album_type']
-        RELEASE_date = item['track']['album']['release_date']
+                track_audio_features = extract_track_features(track_id,1)
+                DANCEABILITY = track_audio_features['danceability']
+                ACOUSTICNESS = track_audio_features['acousticness']
 
-        artists = item['track']['artists']
-        ARTIST_names = []
-        #GENRES = []
-        for j in range(0, len(artists)):
-            artist =  artists[j]
-            ARTIST_names.append(artist['name'])
-            #print(artist['genres'] )
-            #GENRES.append( artist['genres'] )
-        
-        DURATION_ms = item['track']['duration_ms']
-        POPULARITY = item['track']['popularity']
-
-        response = extract_track_features(track_id, 0)
-        DANCEABILITY = response['danceability']
-        ACOUSTICNESS = response['acousticness']
-
-        ENERGY = response['energy']
-        INSTRUMENTALNESS = response['instrumentalness']
-        VALENCE = response['valence']
-        TEMPO = response['tempo']
-        LIVENESS = response['liveness']
-        LOUDNESS = response['loudness']
-        MODE = response['mode']
-        KEY = response['key']
-        SPEECHINESS = response['speechiness']
-
-        track_dictionary = {
-            'SPOTIFY_album_id': SPOTIFY_album_id,
-            'ALBUM_name': ALBUM_name,
-            'ALBUM_type':ALBUM_type,
-            'ARTIST_names':ARTIST_names,
-            #'GENRES':GENRES,
-            'DURATION_ms':DURATION_ms,
-            'RELEASE_date':RELEASE_date,
-            'POPULARITY':POPULARITY,
-            'DANCEABILITY':DANCEABILITY,
-            'ACOUSTICNESS':ACOUSTICNESS,
-            'ENERGY':ENERGY,
-            'INSTRUMENTALNESS':INSTRUMENTALNESS,
-            'VALENCE':VALENCE,
-            'TEMPO':TEMPO,
-            'LIVENESS':LIVENESS,
-            'LOUDNESS':LOUDNESS,
-            'MODE':MODE,
-            'KEY':KEY,
-            'SPEECHINESS':SPEECHINESS
-        }
-        tracks.append(track_dictionary)
-
-    playlist_dictionary ={
-        'PLAYLIST_id':PLAYLIST_id,
-        'PLAYLIST_name':PLAYLIST_name,
-        'TRACKS':tracks
-    }
-
+                ENERGY = track_audio_features['energy']
+                INSTRUMENTALNESS = track_audio_features['instrumentalness']
+                VALENCE = track_audio_features['valence']
+                TEMPO = track_audio_features['tempo']
+                LIVENESS = track_audio_features['liveness']
+                LOUDNESS = track_audio_features['loudness']
+                MODE = track_audio_features['mode']
+                KEY = track_audio_features['key']
+                SPEECHINESS = track_audio_features['speechiness']
+                
+                track_dictionary = {
+                    'ALBUM_id': ALBUM_id,
+                    'ALBUM_name': ALBUM_name,
+                    'ALBUM_type':ALBUM_type,
+                    'ARTIST_names':ARTIST_names,
+                    'DURATION_ms':DURATION_ms,
+                    'RELEASE_date':RELEASE_date,
+                    'POPULARITY':POPULARITY,
+                    'DANCEABILITY':DANCEABILITY,
+                    'ACOUSTICNESS':ACOUSTICNESS,
+                    'ENERGY':ENERGY,
+                    'INSTRUMENTALNESS':INSTRUMENTALNESS,
+                    'VALENCE':VALENCE,
+                    'TEMPO':TEMPO,
+                    'LIVENESS':LIVENESS,
+                    'LOUDNESS':LOUDNESS,
+                    'MODE':MODE,
+                    'KEY':KEY,
+                    'SPEECHINESS':SPEECHINESS
+                }
+                tracks_features.append(track_dictionary)
 
 
