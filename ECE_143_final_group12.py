@@ -6,14 +6,19 @@
 
 # ## ECE 143 - Group 12
 #  
-# Rakshitha Venkappa Handral 
-# Karan Variyambat
-# Megna Anand 
-# Keerthivasan Vijayakumar
-# Chuqiao Lu
-# 
+# * Rakshitha Venkappa Handral 
+# * Karan Variyambat
+# * Megna Anand 
+# * Keerthivasan Vijayakumar
+# * Chuqiao Lu
 
+# # Research Goal
+# 
+# <p style='text-align: justify;'>
 # The main research question is to find the audio features that are most important in curating a cohesive playlist. The primary motivation driving this investigation is to establish a quantitative understanding of why certain songs complement each other within a playlist. Uncovering the most influential features is crucial for empowering music platforms like Spotify to automate playlist creation. By analyzing song features, these platforms can discern patterns and correlations, facilitating the automated assembly of playlists based on the identified features that indicate optimal cohesion between songs.
+# </p>
+
+# # Importing Libraries
 
 # In[1]:
 
@@ -28,7 +33,6 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 
-
 # In[2]:
 
 
@@ -38,29 +42,38 @@ merged_df = pd.read_csv(file_path)
 
 # # Definition of Features
 # 
+# 1. **Acousticnes number [float]** 
+# <br>A confidence measure from 0.0 to 1.0 of whether the track is acoustic. 1.0 represents high confidence the track is acoustic.
 # 
+# 2. **Danceability number [float]** 
+# <br>Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
 # 
-# Acousticnes number [float] A confidence measure from 0.0 to 1.0 of whether the track is acoustic. 1.0 represents high confidence the track is acoustic.
+# 3. **Energy number [float]** 
+# <br>Energy is a measure from 0.0 to 1.0 and represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy. For example, death metal has high energy, while a Bach prelude scores low on the scale. Perceptual features contributing to this attribute include dynamic range, perceived loudness, timbre, onset rate, and general entropy.
 # 
-# Danceability number [float] Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+# 4. **Instrumentalness number [float]** 
+# <br>Predicts whether a track contains no vocals. "Ooh" and "aah" sounds are treated as instrumental in this context. Rap or spoken word tracks are clearly "vocal". The closer the instrumentalness value is to 1.0, the greater likelihood the track contains no vocal content. Values above 0.5 are intended to represent instrumental tracks, but confidence is higher as the value approaches 1.0.
 # 
-# Energy number [float] Energy is a measure from 0.0 to 1.0 and represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy. For example, death metal has high energy, while a Bach prelude scores low on the scale. Perceptual features contributing to this attribute include dynamic range, perceived loudness, timbre, onset rate, and general entropy.
+# 5. **Liveness number [float]** 
+# <br>Detects the presence of an audience in the recording. Higher liveness values represent an increased probability that the track was performed live. A value above 0.8 provides strong likelihood that the track is live.
 # 
-# Instrumentalness number [float] Predicts whether a track contains no vocals. "Ooh" and "aah" sounds are treated as instrumental in this context. Rap or spoken word tracks are clearly "vocal". The closer the instrumentalness value is to 1.0, the greater likelihood the track contains no vocal content. Values above 0.5 are intended to represent instrumental tracks, but confidence is higher as the value approaches 1.0.
+# 6. **Loudness number [float]** 
+# <br>The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
 # 
-# Liveness number [float] Detects the presence of an audience in the recording. Higher liveness values represent an increased probability that the track was performed live. A value above 0.8 provides strong likelihood that the track is live.
+# 7. **Mode [integer]** 
+# <br>Mode indicates the modality (major or minor) of a track, the type of scale from which its melodic content is derived. Major is represented by 1 and minor is 0.
 # 
-# Loudness number [float] The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+# 8. **Speechiness number [float]** 
+# <br>Speechiness detects the presence of spoken words in a track. The more exclusively speech-like the recording (e.g. talk show, audio book, poetry), the closer to 1.0 the attribute value. Values above 0.66 describe tracks that are probably made entirely of spoken words. Values between 0.33 and 0.66 describe tracks that may contain both music and speech, either in sections or layered, including such cases as rap music. Values below 0.33 most likely represent music and other non-speech-like tracks.
 # 
-# Mode integer Mode indicates the modality (major or minor) of a track, the type of scale from which its melodic content is derived. Major is represented by 1 and minor is 0.
+# 9. **Tempo number [float]** 
+# <br>The overall estimated tempo of a track in beats per minute (BPM). In musical terminology, tempo is the speed or pace of a given piece and derives directly from the average beat duration.
 # 
-# Speechiness number [float] Speechiness detects the presence of spoken words in a track. The more exclusively speech-like the recording (e.g. talk show, audio book, poetry), the closer to 1.0 the attribute value. Values above 0.66 describe tracks that are probably made entirely of spoken words. Values between 0.33 and 0.66 describe tracks that may contain both music and speech, either in sections or layered, including such cases as rap music. Values below 0.33 most likely represent music and other non-speech-like tracks.
+# 10. **Time_signature [integer]** 
+# <br>An estimated time signature. The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of "3/4", to "7/4".
 # 
-# Tempo number [float] The overall estimated tempo of a track in beats per minute (BPM). In musical terminology, tempo is the speed or pace of a given piece and derives directly from the average beat duration.
-# 
-# Time_signature integer An estimated time signature. The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of "3/4", to "7/4".
-# 
-# Valence number [float] A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry).
+# 11. **Valence number [float]** 
+# <br>A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry).
 
 # # Cleaning the Dataset
 
@@ -97,7 +110,9 @@ print(f"Duration (ms) - Max: {max_duration}, Min: {min_duration}, Average: {aver
 
 
 # # Feature Correlation Across Playlists
+# <p style='text-align: justify;'> 
 # Analyzing how features like tempo, energy, or valence are correlated across different playlists can reveal important patterns in music preferences that go beyond specific genres. This method helps us understand which musical qualities are commonly found in a wide range of songs. When these features show consistent correlations, it suggests that they are key factors in making playlists appealing. This information is very useful for those who create playlists and for music streaming services, as it allows them to make better recommendations and update their content to keep users engaged. Additionally, studying correlations across playlists helps identify major themes and trends in music. This is crucial for improving content curation algorithms, ensuring that playlists stay current and in line with changing listener tastes.
+# <p>
 
 # In[5]:
 
@@ -123,9 +138,9 @@ map.set_xticklabels(map.get_xticklabels(), rotation=90)
 
 
 # # Feature Correlation Within Playlists
+# <p style='text-align: justify;'>
 # The heatmap is a useful for recognizing relationships between different musical features in our playlists. Grasping these correlations aids in curating playlists, allowing for a mix of track qualities to enhance diversity and engagement. By applying these insights, playlist curators can fine-tune their choices to create desired moods or themes, manipulating the mix of related features accordingly.
-# 
-# 
+# <p>
 
 # # Feature Correlation in Party playlists
 # 
@@ -212,9 +227,9 @@ for playlist_name in target_playlists:
     plt.show()
 
 
+# <p style='text-align: justify;'>
 # The table highlighting the strongest correlations for each feature offers key insights into how different musical traits interact within our dataset. For example, in party playlists, 'ENERGY' and 'LOUDNESS' are positively correlated, indicating that louder tracks are usually more energetic. Likewise, 'DANCEABILITY' and 'VALENCE' have a strong positive relationship, suggesting danceable tracks often carry a more positive mood. However, correlations between 'DURATION_ms' and features like 'KEY' and 'MODE' are weaker, hinting at their relative independence in terms of musical characteristics. This table not only measures correlation strengths but also sheds light on specific connections between music features, enhancing our understanding of the data's underlying trends.
-# 
-# 
+# <p>
 
 # # Bar plot of negative correlating features
 # 
@@ -237,9 +252,9 @@ for playlist_name in target_playlists:
     plt.show()
 
 
+# <p style='text-align: justify;'>
 # In the "Party Playlist," there's a clear negative correlation between the energy and loudness of songs and their acousticness. This means that as songs become more energetic and louder, they tend to be less acoustic, and vice versa. This trend indicates a preference for high-energy, loud tracks with less acoustic quality in party playlists. This negative relationship between these attributes likely contributes to a vibrant, energetic party atmosphere. Understanding these correlations is crucial for playlist curators, as it helps in selecting tracks that strike the right balance between acoustic qualities and the desired levels of energy and loudness, enhancing the party experience.
-# 
-# 
+# <p>
 
 # # Feature Correlation in Sad Playlists
 # 
@@ -325,11 +340,12 @@ for playlist_name in target_playlists:
     plt.show()
 
 
+# <p style='text-align: justify;'>
 # In the "Sad Playlist," there's a noticeable link between the energy and loudness of songs. This suggests that in sadder music, lower energy often goes hand in hand with reduced loudness. Essentially, the interaction of energy and loudness in these tracks shows a harmonized adjustment; as a song's energy level drops, its loudness tends to decrease as well. Additionally, there's a strong positive correlation between loudness and energy. This pattern highlights the deliberate coordination of these features to shape the emotional tone of the playlist, demonstrating a subtle relationship that becomes evident when the intensity of a sad song is purposefully altered.
-# 
-# 
+# <p>
 
 # In[14]:
+
 
 
 target_playlists = ['sad','Emotional']
@@ -348,7 +364,9 @@ for playlist_name in target_playlists:
     plt.show()
 
 
-# In the "Sad Playlist," there's a distinct negative correlation between energy and loudness, and acoustic qualities. This means that in sad songs, lower energy or loudness is often associated with higher acoustic elements. Simply put, as songs become less intense emotionally, acoustic features become more pronounced. This trend indicates a deliberate choice in the playlist's design: as energetic aspects decrease, there's an intentional focus on enhancing acoustic elements. This negative correlation contributes significantly to the playlist's emotional depth, where the interplay between energy and acousticness is key in creating the desired somber mood for listeners seeking a reflective musical experience
+# <p style='text-align: justify;'>
+# In the "Sad Playlist," there's a distinct negative correlation between energy and loudness, and acoustic qualities. This means that in sad songs, lower energy or loudness is often associated with higher acoustic elements. Simply put, as songs become less intense emotionally, acoustic features become more pronounced. This trend indicates a deliberate choice in the playlist's design: as energetic aspects decrease, there's an intentional focus on enhancing acoustic elements. This negative correlation contributes significantly to the playlist's emotional depth, where the interplay between energy and acousticness is key in creating the desired somber mood for listeners seeking a reflective musical experience.
+# <p>
 
 # # Regression plots
 # 
@@ -422,7 +440,9 @@ average_values_df = pd.DataFrame(average_values_list)
 
 
 # # Correlation Coefficient - Looking at how the features correlate within playlists
+# <p style='text-align: justify;'>
 # This section delves into the statistical examination of 12 distinct musical features across 1000 playlists. The focus here is on calculating the average correlation coefficients for each feature, offering a comprehensive view of which features are most similar among songs within a playlist that go well together, and which are most different. The lower the correlation coefficient value, the less variation there is of that feature amongst songs in a given playlist.
+# <p>
 
 # In[18]:
 
@@ -461,9 +481,9 @@ plt.ylabel('Playlists')
 plt.show()
 
 
+# <p style='text-align: justify;'>
 # This is a visual representation of the coefficients found above. As we can see, loudness, danceability, energy, and tempo tend to be the most similar amongst songs in a playlist, and instrumentalness tends to vary the most.
-# 
-# 
+# <p>
 
 # In[20]:
 
@@ -542,12 +562,6 @@ def plot_distribution_bar_graphs(df_dict, features):
 # In[22]:
 
 
-import seaborn as sns
-import matplotlib.pyplot as plt
-
-import seaborn as sns
-import matplotlib.pyplot as plt
-
 def plot_boxplots_for_moods(df_dict, features):
     num_features = len(features)
     num_moods = len(df_dict)
@@ -603,28 +617,19 @@ mood_dfs = {'Happy': pd.concat([happy_df_1, happy_df_2]).drop_duplicates(subset=
 plot_distribution_bar_graphs(mood_dfs, features)
 
 
-
 # In[24]:
 
 
 plot_boxplots_for_moods(mood_dfs, features)
 
 
+# <p style='text-align: justify;'>
 # This section visually depicts how the features vary across moods. The most notable differences seem to be that hype playlists have the highest values for speechiness, danceability, and popularity. Happy and hype playlists tend to have higher loudness and energy values than sad playlists. Sad playlists tend to have much higher acousticness values compared to happy and hype playlists.
-
-# In[25]:
-
-
-import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
-
-df = pd.read_csv('./merged_playlist_without_duplicates_0_999.csv')
-
+# <p>
 
 # # Analysing Playlist Popularity vs Track features
 
-# In[26]:
+# In[25]:
 
 
 def analyse_playlist_popularity(df = df, k = 3):
@@ -680,7 +685,7 @@ def analyse_playlist_popularity(df = df, k = 3):
 # 
 # 1. Playlist popularity depends maybe on other underlying non-audio features of a track such as the number of times a track has been played and how recent those plays were, explaining the unusual observation.
 
-# In[27]:
+# In[26]:
 
 
 analyse_playlist_popularity(df, k = 3)
@@ -688,7 +693,7 @@ analyse_playlist_popularity(df, k = 3)
 
 # # Analysing Number of Tracks per playlist v/s Track features
 
-# In[28]:
+# In[27]:
 
 
 def analyse_track_count_per_playlist(df = df, k = 3):
@@ -701,7 +706,7 @@ def analyse_track_count_per_playlist(df = df, k = 3):
     Parameters
     ----------
     df : A DataFrame
-        The default is df.
+        The default is merged_df.
     k : An integer
         The default is 3.
 
@@ -748,7 +753,7 @@ def analyse_track_count_per_playlist(df = df, k = 3):
 # 1. Longer playlists tend to have songs which are more Acoustic and less on Loudness, Energy and Danceability.
 # 
 
-# In[29]:
+# In[28]:
 
 
 analyse_track_count_per_playlist(df, k = 3)
@@ -781,9 +786,3 @@ analyse_track_count_per_playlist(df, k = 3)
 # # References
 # 1. https://www.aicrowd.com/challenges/spotify-million-playlist-dataset-challenge 
 # 2. https://developer.spotify.com/documentation/web-api 
-
-# In[ ]:
-
-
-
-
