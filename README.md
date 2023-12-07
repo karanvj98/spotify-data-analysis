@@ -20,7 +20,7 @@ This project investigates the crucial audio features that contribute to the cohe
   
 - **ECE_143_final.py:** Final project code in Python script format, including all analyses and conclusions.
   
-- **Spotify_Data_Analysis_PPT_Group_12.pdf:** Presentation slices summarizing the project.
+- **Spotify_Data_Analysis_PPT_Group_12.pdf:** Presentation slides summarizing the project.
 
 ## Third-Party Modules Used:
 
