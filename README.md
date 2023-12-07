@@ -64,7 +64,7 @@ Use pip3 if python 3 is being used
 
 ## Analysis and Conclusions:
 
-For an in-depth analysis and comprehensive conclusions drawn from the dataset, please refer to the Jupyter Notebook file [ECE_143_final.ipynb](ECE_143_final.ipynb). This notebook encompasses detailed exploratory data analysis, feature engineering, and insights gained from the Spotify Million Playlist Dataset. The findings shed light on the key audio features influencing playlist cohesiveness, providing valuable insights for music curation and automated playlist generation. Presentation slides are present in [Spotify_Data_Analysis_PPT_Group_12.pdf](Spotify_Data_Analysis_PPT_Group_12.pdf)
+For an in-depth analysis and comprehensive conclusions drawn from the dataset, please refer to the Jupyter Notebook file [ECE_143_final_group12.ipynb](ECE_143_final_group12.ipynb). This notebook encompasses detailed exploratory data analysis, feature engineering, and insights gained from the Spotify Million Playlist Dataset. The findings shed light on the key audio features influencing playlist cohesiveness, providing valuable insights for music curation and automated playlist generation. Presentation slides are present in [Spotify_Data_Analysis_PPT_Group_12.pdf](Spotify_Data_Analysis_PPT_Group_12.pdf)
 
 ## References:
 
