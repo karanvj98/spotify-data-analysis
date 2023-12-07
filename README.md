@@ -12,7 +12,7 @@ This project investigates the crucial audio features that contribute to the cohe
   
 - **batch_data_extraction.ipynb:** Jupyter Notebook file for extracting data from the Spotify API.
   
-- **batch_data_extraction.py:** Python script for extracting data from the Spotify API.
+- **batch_data_extraction.py:** Python script for extracting data from the Spotify API using track IDs mentioned in `mpd.slice.0-999.json`.
   
 - **merged_playlist_without_duplicates_0_999.csv:** Dataset under investigation, resulting from the data extraction process.
   
