@@ -75,4 +75,11 @@ For an in-depth analysis and comprehensive conclusions drawn from the dataset, p
 
 2. [Spotify Web API Documentation](https://developer.spotify.com/documentation/web-api)
 
+## My Contribution
 
+As part of this collaborative project, I was primarily responsible for:
+
+- Analyzing audio features to explore what influences **playlist popularity**.
+- Investigating how **playlist length** correlates with song types (e.g., acoustic vs. party tracks).
+- Assisting with the **GitHub setup** and organizing the project structure.
+- Supporting the creation of the **final presentation deck**.
